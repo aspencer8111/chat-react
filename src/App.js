@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import RoomList from './RoomList'
-import logo from './logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
 

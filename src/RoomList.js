@@ -17,21 +17,12 @@ class RoomList extends Component {
     });
   }
 
-  _handleChange(e) {
-    this.setState({newRoomName: e.target.value})
-  }
-
-  _addRoom(e) {
-    e.preventDefault()
-    this.roomsRef.push( { name: this.state.newRoomName } )
-  }
-
   render() {
     return (
       <div className="roomList">
         <section className='roomList'>
-          <form onSubmit={ this._addRoom.bind(this)  }>
-            <input onChange={ this._handleChange.bind(this) } type='text' placeholder='New Room Name' />
+          <form onSubmit={ this.props._addRoom.bind(this)  }>
+            <input onChange={ this.props._handleRoomChange.bind(this) } type='text' placeholder='New Room Name' />
             <input type='submit' value='Add Room' />
           </form>
           <ul>

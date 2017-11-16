@@ -14,11 +14,24 @@ var config = {
 firebase.initializeApp(config);
 
 class App extends Component {
+
+  _handleRoomChange(e) {
+    this.setState({newRoomName: e.target.value})
+  }
+
+  _addRoom(e) {
+    e.preventDefault()
+    this.roomsRef.push( { name: this.state.newRoomName } )
+    e.target.children[0].value = ''
+  }
+
   render() {
     return (
       <div className="App">
         <div className="App-intro">
-          <RoomList firebase={ firebase }/>
+          <RoomList firebase={ firebase }
+                    _handleRoomChange={ this._handleRoomChange }
+                    _addRoom={ this._addRoom } />
         </div>
       </div>
     );

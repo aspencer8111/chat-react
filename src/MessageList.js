@@ -8,6 +8,11 @@ class MessageList extends Component {
         {this.props.messages.map((message, i) => {
           return <p key={i}>{message.content}</p>
         })}
+        <hr />
+        <form onSubmit={this.props._addMessage}>
+          <input type='input' onChange={this.props._handleMessageChange} placeholder='Say something cool!'/>
+          <input type='submit' value="GO!" />
+        </form>
       </div>
     )
   }

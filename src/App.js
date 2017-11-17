@@ -20,6 +20,7 @@ class App extends Component {
     super()
     this.state = {
       activeRoomId: '',
+      newMessage: '',
       messages: []
     }
     this.messagesRef = firebase.database().ref('messages')
@@ -29,27 +30,33 @@ class App extends Component {
     this.setState({newRoomName: e.target.value})
   }
 
+  _handleMessageChange(e) {
+    this.setState({newMessage: e.target.value})
+  }
+
   _addRoom(e) {
     e.preventDefault()
     this.roomsRef.push( { name: this.state.newRoomName } )
     e.target.children[0].value = ''
   }
 
-  getMessages(roomId) {
-    let messagesArray = []
-    this.messagesRef.orderByChild("roomId").equalTo(roomId).on("value", function(snapshot) {
-      let messagesObj = snapshot.val();
-      for( var message in messagesObj) {
-        messagesArray.push(messagesObj[message])
-      }
-    })
-    this.setState({ messages: messagesArray })
+  _addMessage(e) {
+    e.preventDefault()
+    let message = {
+      content: this.state.newMessage,
+      username: 'alex',
+      roomId: this.state.activeRoomId,
+      sentAt: firebase.database.ServerValue.TIMESTAMP
+    }
+    this.messagesRef.push(message)
   }
 
-
   _setRoom(room) {
+    this.messagesRef.orderByChild("roomId").equalTo(room.key).on('child_added', snapshot  => {
+      const message = Object.assign(snapshot.val(), {key: snapshot.key})
+      this.setState({ messages: this.state.messages.concat( message ) })
+    });
     this.setState({ activeRoomId: room.key })
-    this.getMessages(room.key)
   }
 
   render() {
@@ -63,7 +70,9 @@ class App extends Component {
         </div>
         <div className="Messages">
           <MessageList firebase={ firebase }
-                       messages={ this.state.messages }/>
+                       messages={ this.state.messages }
+                       _addMessage={ this._addMessage.bind(this) }
+                       _handleMessageChange={ this._handleMessageChange.bind(this) } />
         </div>
       </div>
     );

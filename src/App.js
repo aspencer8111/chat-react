@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import RoomList from './RoomList'
+import MessageList from './MessageList'
 import './App.css';
 import * as firebase from 'firebase';
 
@@ -15,6 +16,15 @@ firebase.initializeApp(config);
 
 class App extends Component {
 
+  constructor(){
+    super()
+    this.state = {
+      activeRoomId: '',
+      messages: []
+    }
+    this.messagesRef = firebase.database().ref('messages')
+  }
+
   _handleRoomChange(e) {
     this.setState({newRoomName: e.target.value})
   }
@@ -25,13 +35,35 @@ class App extends Component {
     e.target.children[0].value = ''
   }
 
+  getMessages(roomId) {
+    let messagesArray = []
+    this.messagesRef.orderByChild("roomId").equalTo(roomId).on("value", function(snapshot) {
+      let messagesObj = snapshot.val();
+      for( var message in messagesObj) {
+        messagesArray.push(messagesObj[message])
+      }
+    })
+    this.setState({ messages: messagesArray })
+  }
+
+
+  _setRoom(room) {
+    this.setState({ activeRoomId: room.key })
+    this.getMessages(room.key)
+  }
+
   render() {
     return (
       <div className="App">
-        <div className="App-intro">
+        <div className="Rooms">
           <RoomList firebase={ firebase }
                     _handleRoomChange={ this._handleRoomChange }
-                    _addRoom={ this._addRoom } />
+                    _addRoom={ this._addRoom }
+                    _setRoom={ this._setRoom.bind(this) }/>
+        </div>
+        <div className="Messages">
+          <MessageList firebase={ firebase }
+                       messages={ this.state.messages }/>
         </div>
       </div>
     );

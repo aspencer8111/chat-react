@@ -9,7 +9,7 @@ class MessageList extends Component {
           return <p key={i}>{message.content}</p>
         })}
         <hr />
-        <form onSubmit={this.props._addMessage}>
+        <form onSubmit={this.props.addMessage}>
           <input type='input' onChange={this.props._handleMessageChange} placeholder='Say something cool!'/>
           <input type='submit' value="GO!" />
         </form>

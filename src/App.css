@@ -26,3 +26,14 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.Rooms {
+    width: 25%;
+    border-right: 1px solid black;
+    float: left;
+}
+
+li {
+  list-style: none;
+  padding: 10px;
+}

@@ -34,13 +34,13 @@ class App extends Component {
     this.setState({newMessage: e.target.value})
   }
 
-  _addRoom(e) {
+  addRoom(e) {
     e.preventDefault()
     this.roomsRef.push( { name: this.state.newRoomName } )
     e.target.children[0].value = ''
   }
 
-  _addMessage(e) {
+  addMessage(e) {
     e.preventDefault()
     let message = {
       content: this.state.newMessage,
@@ -51,12 +51,28 @@ class App extends Component {
     this.messagesRef.push(message)
   }
 
-  _setRoom(room) {
+  setRoom(room) {
+    this.setState({  messages: [] })
     this.messagesRef.orderByChild("roomId").equalTo(room.key).on('child_added', snapshot  => {
       const message = Object.assign(snapshot.val(), {key: snapshot.key})
       this.setState({ messages: this.state.messages.concat( message ) })
-    });
+    })
     this.setState({ activeRoomId: room.key })
+  }
+
+  showMessagesDiv() {
+    if (this.state.activeRoomId === '') {
+      return <em>Select A Room</em>
+    } else {
+      return (
+        <div className="Messages">
+          <MessageList firebase={ firebase }
+                       messages={ this.state.messages }
+                       addMessage={ this.addMessage.bind(this) }
+                       _handleMessageChange={ this._handleMessageChange.bind(this) } />
+        </div>
+      )
+    }
   }
 
   render() {
@@ -65,15 +81,10 @@ class App extends Component {
         <div className="Rooms">
           <RoomList firebase={ firebase }
                     _handleRoomChange={ this._handleRoomChange }
-                    _addRoom={ this._addRoom }
-                    _setRoom={ this._setRoom.bind(this) }/>
+                    addRoom={ this.addRoom }
+                    setRoom={ this.setRoom.bind(this) }/>
         </div>
-        <div className="Messages">
-          <MessageList firebase={ firebase }
-                       messages={ this.state.messages }
-                       _addMessage={ this._addMessage.bind(this) }
-                       _handleMessageChange={ this._handleMessageChange.bind(this) } />
-        </div>
+        {  this.showMessagesDiv() }
       </div>
     );
   }

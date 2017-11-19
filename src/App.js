@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RoomList from './RoomList'
 import MessageList from './MessageList'
+import User from './User'
 import './App.css';
 import * as firebase from 'firebase';
 
@@ -19,11 +20,18 @@ class App extends Component {
   constructor(){
     super()
     this.state = {
+      username: '',
       activeRoomId: '',
       newMessage: '',
-      messages: []
+      messages: [],
     }
     this.messagesRef = firebase.database().ref('messages')
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged( user => {
+      this.setUser(user)
+    })
   }
 
   _handleRoomChange(e) {
@@ -60,6 +68,10 @@ class App extends Component {
     this.setState({ activeRoomId: room.key })
   }
 
+  setUser(user) {
+    this.setState({ username: user.displayName })
+  }
+
   showMessagesDiv() {
     if (this.state.activeRoomId === '') {
       return <em>Select A Room</em>
@@ -75,6 +87,16 @@ class App extends Component {
     }
   }
 
+  login() {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase.auth().signInWithPopup( provider )
+  }
+
+  logout() {
+    firebase.auth().signOut();
+    this.setState({ username: undefined })
+  }
+
   render() {
     return (
       <div className="App">
@@ -85,6 +107,9 @@ class App extends Component {
                     setRoom={ this.setRoom.bind(this) }/>
         </div>
         {  this.showMessagesDiv() }
+        <User login={ this.login.bind(this) }
+              logout={ this.logout.bind(this) }
+         />
       </div>
     );
   }

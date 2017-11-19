@@ -80,7 +80,7 @@ class App extends Component {
       return <em>Select A Room</em>
     } else {
       return (
-        <div className="Messages">
+        <div className="Messages col-sm-9">
           <MessageList firebase={ firebase }
                        messages={ this.state.messages }
                        addMessage={ this.addMessage.bind(this) }
@@ -102,18 +102,20 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="Rooms">
-          <RoomList firebase={ firebase }
-                    _handleRoomChange={ this._handleRoomChange }
-                    addRoom={ this.addRoom }
-                    setRoom={ this.setRoom.bind(this) }/>
+      <div className='container'>
+        <div className="App">
+          <div className="Rooms col-sm-3">
+            <User login={ this.login.bind(this) }
+                  logout={ this.logout.bind(this) }
+                  username={ this.state.username }
+             />
+            <RoomList firebase={ firebase }
+                      _handleRoomChange={ this._handleRoomChange }
+                      addRoom={ this.addRoom }
+                      setRoom={ this.setRoom.bind(this) }/>
+          </div>
+          {  this.showMessagesDiv() }
         </div>
-        {  this.showMessagesDiv() }
-        <User login={ this.login.bind(this) }
-              logout={ this.logout.bind(this) }
-              username={ this.state.username }
-         />
       </div>
     );
   }

@@ -21,18 +21,17 @@ class RoomList extends Component {
       <div className="roomList">
         <h3>Rooms</h3>
         <section className='roomList'>
-          <form onSubmit={ this.props.addRoom.bind(this)  }>
-            <input onChange={ this.props._handleRoomChange.bind(this) } type='text' placeholder='New Room Name' />
-            <input type='submit' value='Add Room' />
+          <form onSubmit={ this.props.addRoom.bind(this) }>
+            <div className="form-group">
+              <input className="form-control" onChange={ this.props._handleRoomChange.bind(this) } type='text' placeholder='New Room Name' />
+              <br />
+              <input type='submit' value='Add Room' className="btn btn-primary"/>
+            </div>
           </form>
           <ul>
           {
            this.state.rooms.map((room, i) =>
-             <div key={i} >
-               <div id={room.key}>
-                  <li onClick={ () => { this.props.setRoom(room) } } >{ room.name } </li>
-               </div>
-             </div>
+            <li key={i} onClick={ () => { this.props.setRoom(room) } } >{ room.name } </li>
            )
           }
           </ul>

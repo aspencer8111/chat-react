@@ -9,9 +9,9 @@ class MessageList extends Component {
           return <p key={i}>{`${message.username} said: ${message.content}`}</p>
         })}
         <hr />
-        <form onSubmit={this.props.addMessage}>
-          <input type='input' onChange={this.props._handleMessageChange} placeholder='Say something cool!'/>
-          <input type='submit' value="GO!" />
+        <form className="form-group" onSubmit={this.props.addMessage}>
+          <textarea className="form-control" onChange={this.props._handleMessageChange} placeholder='Say something cool!'></textarea>
+          <input className="btn btn-primary" type='submit' value="Submit" />
         </form>
       </div>
     )

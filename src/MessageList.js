@@ -6,7 +6,7 @@ class MessageList extends Component {
       <div>
         <h3>Messages</h3>
         {this.props.messages.map((message, i) => {
-          return <p key={i}>{message.content}</p>
+          return <p key={i}>{`${message.username} said: ${message.content}`}</p>
         })}
         <hr />
         <form onSubmit={this.props.addMessage}>

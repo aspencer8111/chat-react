@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 
 class User extends Component {
+  showUserAuthButtons() {
+    if(this.props.username){
+      return <button onClick={ this.props.logout }>LogOut</button>
+    } else {
+      return <button onClick={ this.props.login }>LogIn</button>
+    }
+  }
+
   render() {
     return (
       <div className="userButtons">
-        <button onClick={ this.props.login }>LogIn</button>
-        <button onClick={ this.props.logout }>LogOut</button>
+        { this.showUserAuthButtons() }
       </div>
     )
   }

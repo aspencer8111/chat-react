@@ -50,9 +50,10 @@ class App extends Component {
 
   addMessage(e) {
     e.preventDefault()
+    let username = this.state.username || "Guest User"
     let message = {
       content: this.state.newMessage,
-      username: 'alex',
+      username: username,
       roomId: this.state.activeRoomId,
       sentAt: firebase.database.ServerValue.TIMESTAMP
     }
@@ -60,16 +61,18 @@ class App extends Component {
   }
 
   setRoom(room) {
-    this.setState({  messages: [] })
+    this.setState({ messages: [] })
     this.messagesRef.orderByChild("roomId").equalTo(room.key).on('child_added', snapshot  => {
-      const message = Object.assign(snapshot.val(), {key: snapshot.key})
+      const message = Object.assign({}, snapshot.val(), {key: snapshot.key})
       this.setState({ messages: this.state.messages.concat( message ) })
     })
     this.setState({ activeRoomId: room.key })
   }
 
   setUser(user) {
-    this.setState({ username: user.displayName })
+    if(user){
+      this.setState({ username: user.displayName })
+    }
   }
 
   showMessagesDiv() {
@@ -109,6 +112,7 @@ class App extends Component {
         {  this.showMessagesDiv() }
         <User login={ this.login.bind(this) }
               logout={ this.logout.bind(this) }
+              username={ this.state.username }
          />
       </div>
     );
